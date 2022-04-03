@@ -11,10 +11,11 @@ resources:
 variables:
 
   # Container registry service connection established during pipeline creation
-  imageRepository: '_update_here_'
+  kubernetesServiceConnection: '_update_here_'
+  imageRepository: 'webapp'
   containerRegistry: '_update_here_'
-  tag: '_update_here_'
-  imagePullSecret: '_update_here_'
+  tag: 'latest'
+  imagePullSecret: 'regsecret'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -33,16 +34,22 @@ stages:
       runOnce:
         deploy:
           steps:
-          - checkout: self
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'specific'
+              project: '_update_here_'
+              definition: '_update_here_'
+              buildVersionToDownload: 'latest'
+              artifactName: 'manifests'
+              targetPath: '$(Pipeline.Workspace)/manifests'
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
               kubernetesServiceConnection: $(kubernetesServiceConnection)
               namespace: 'qa'
-              # checkout source are located in `$(Pipeline.Workspace)/s`
               manifests: |
-                $(Pipeline.Workspace)/s/manifests/deployment_all.yml
+                $(Pipeline.Workspace)/manifests/deployment_all.yml
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
