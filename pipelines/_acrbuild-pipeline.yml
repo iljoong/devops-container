@@ -31,3 +31,5 @@ steps:
           --build-arg BUILDID=$(tag) \
           -t $(containerRegistry)/$(imageRepository):$(tag) \
           -t $(containerRegistry)/$(imageRepository):latest $(Build.SourcesDirectory)/src
+- upload: manifests
+  artifact: manifests
