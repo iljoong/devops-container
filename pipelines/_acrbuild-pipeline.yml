@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '_update_here_'
+  imageRepository: 'update_here_'
+  containerRegistry: 'update_here_'
+  dockerfilePath: '$(Build.SourcesDirectory)/src/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: '_update_here_'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az acr build -r $(containerRegistry) -f $(dockerfilePath) \
+          --build-arg BUILDID=$(tag) \
+          -t $(containerRegistry)/$(imageRepository):$(tag) \
+          -t $(containerRegistry)/$(imageRepository):latest $(Build.SourcesDirectory)/src

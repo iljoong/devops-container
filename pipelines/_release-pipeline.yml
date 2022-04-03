@@ -1,0 +1,50 @@
+# Deploy to Azure Kubernetes Service
+# Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+
+  # Container registry service connection established during pipeline creation
+  imageRepository: '_update_here_'
+  containerRegistry: '_update_here_'
+  tag: '_update_here_'
+  imagePullSecret: '_update_here_'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Deploy
+  displayName: Deploy stage
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: $(vmImageName)
+    # create an environment (aks-qa) before run this pipeline
+    environment: 'aks-qa'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: deploy
+              kubernetesServiceConnection: $(kubernetesServiceConnection)
+              namespace: 'qa'
+              # checkout source are located in `$(Pipeline.Workspace)/s`
+              manifests: |
+                $(Pipeline.Workspace)/s/manifests/deployment_all.yml
+              imagePullSecrets: |
+                $(imagePullSecret)
+              containers: |
+                $(containerRegistry)/$(imageRepository):$(tag)
+
