@@ -7,9 +7,9 @@
 Build and run a container in local environment.
 
 ```
-docker build -t webapp:1 -f Dockerfile .
+docker build -t webapp:latest -f ./src/Dockerfile ./src
 
-docker run --name webapp --rm -p 8080:80 -d webapp:1
+docker run --name webapp --rm -e BUILDID=001 -e APP_ENVIRONMENT=Dev -p 5000:80 -d webapp:latest
 ```
 
 ### ACR build
@@ -49,10 +49,10 @@ kubectl describe pod <podname> -n qa
 ## References
 
 - Containerize a .NET app
-    - https://docs.microsoft.com/en-us/dotnet/core/docker/build-container
+    - https://learn.microsoft.com/en-us/dotnet/core/docker/build-container?tabs=linux&pivots=dotnet-7-0
 
 - Azure DevOps (yaml)
-    - yaml schema: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/?view=azure-pipelines
-    - pipeline task: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops
-    - K8s manifest task: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/kubernetes-manifest?view=azure-devops
-    - pre-defiend variables: https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables
+    - yaml schema: https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/?view=azure-pipelines
+    - pipeline task: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/?view=azure-pipelines&viewFallbackFrom=azure-devops
+    - K8s manifest task: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/kubernetes-manifest-v0?view=azure-pipelines&viewFallbackFrom=azure-devops
+    - pre-defiend variables: https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
