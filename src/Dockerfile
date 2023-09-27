@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+ARG BUILDID=0
+ENV BUILD_BUILDID=$BUILDID
 WORKDIR /app
 
 # Copy everything
