@@ -18,7 +18,7 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '_update_here_'
   imageRepository: '_update_here_'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/src/Dockerfile'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
@@ -58,3 +58,5 @@ stages:
         tags: |
           $(tag)
           latest
+    - upload: manifests
+      artifact: manifests
